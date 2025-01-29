@@ -24,6 +24,8 @@
 </head>
 <body>
     <h3>เกมคลิ๊กเป้าหมาย</h3>
+    <button id="start" onclick="timeStart()">Start</button>
+    <p id="timeLeft"></p>
     <p>คะแนน: <span id="score">0</span></p>
     
 
@@ -32,13 +34,45 @@
     </div>
     
 
+
     <script>
         let score = 0;
+        let gamestart = false;
+        let gameover = true;
+        let timeleft = 30;
+        let timeInterval;
+
+        function timeStart() {
+            if(!gamestart) {
+                gamestart = true;
+                gameover = false;
+                document.getElementById("start").style.display = "none";
+                document.getElementById("timeLeft").textContent = `เวลา: ${timeleft}`;
+            }
+
+            timeInterval = setInterval(function () {
+                timeleft--;
+                document.getElementById("timeLeft").textContent = `เวลา: ${timeleft}`;
+            
+
+            if (timeleft === 0) {
+                clearInterval(timeInterval);
+                alert("Game Over! คะแนนของคุณคือ " + score);
+                document.getElementById("start").style.display = "block";
+                gamestart = false;
+                gameover = true;
+                document.getElementById("timeLeft").textContent = "";
+                }
+            }, 1000)
+        }
 
         function hitTarget() {
             // เพิ่มคะแนน 
+            if (gameover) return;
+        
             score++;
             document.getElementById("score").textContent = score;
+        
 
             // สุ่มตำแหน่ง
             let gameArea = document.getElementById("gameArea");
